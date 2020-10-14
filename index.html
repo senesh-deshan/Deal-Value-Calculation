@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+
+<head>
+
+    <title>Deal Value Calculation</title>
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <script type="text/javascript" src="jspdf.umd.js"></script>
+    <style>
+        * {
+            box-sizing: border-box
+        }
+        /* Set height of body and the document to 100% */
+        
+        body,
+        html {
+            height: 100%;
+            margin: 0;
+            font-family: Arial;
+        }
+        /* Style tab links */
+        
+        .tablink {
+            background-color: #555;
+            color: white;
+            float: left;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            padding: 14px 16px;
+            font-size: 17px;
+            width: 50%;
+        }
+        
+        .tablink:hover {
+            background-color: #777;
+        }
+        /* Style the tab content (and add height:100% for full page content) */
+        
+        .tabcontent {
+            color: white;
+            display: none;
+            padding: 60px 20px;
+            height: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <button class="tablink" onclick="openPage('tab1',this)" id="defaultOpen">Chinese Payments</button>
+    <button class="tablink" onclick="openPage('tab2',this)">Paypal Venmo</button>
+
+    <div id="tab1" class="tabcontent">
+        <div class="container1" style="margin-top: auto; padding-top: 15px;">
+            <div class="row clearfix">
+                <!-- <div class="col-md-3"></div> -->
+                <div class="col-md-12">
+                    <table class="table table-bordered table-hover">
+                        <!-- <thead>
+                            <tr>
+                                <th class="text-center"> </th>
+                                <th class="text-center"> </th>
+                                <th class="text-center"> </th>
+                            </tr>
+                        </thead> -->
+                        <tbody>
+                            <tr>
+                                <th colspan="2">Total revenue</th>
+                                <td>
+                                    <div class="input-group mb-2 mb-sm-0">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">$</span>
+                                        </div>
+                                        <input id="totalRevenue1" type="text" placeholder="0" value="0" class="form-control qty" step="0" min="0" />
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th colspan="2">Book value (Estimated Addressible Size for the Deal) %3</th>
+                                <td>
+                                    <div class="input-group mb-2 mb-sm-0">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">$</span>
+                                        </div>
+                                        <input id="bookValue1" type="text" placeholder="0" value="0" class="form-control qty" step="0" min="0" />
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th colspan="2">Percentage of stores launching (number of stores launching / total number of stores)</th>
+                                <td>
+                                    <div class="input-group mb-2 mb-sm-0">
+                                        <input id="percentOfStores" type="number" placeholder="0" value="0" class="form-control qty" step="0" min="0" />
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">%</span>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="1">WeChat Pay</td>
+                                <td><select id="weChatSelect" class="form-control">
+                                        <option value="0">None</option>
+                                        <option value="30">Yes</option>
+                                    </select></td>
+                                <td>
+                                    <div class="input-group mb-2 mb-sm-0">
+                                        <input id="weChatPercent" type="number" placeholder="0" value="0" class="form-control total" readonly />
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">%</span>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="1">Alipay</td>
+                                <td><select id="aliPaySelect" class="form-control">
+                                        <option value="0">None</option>
+                                        <option value="30">Yes</option>
+                                    </select></td>
+                                <td>
+                                    <div class="input-group mb-2 mb-sm-0">
+                                        <input id="aliPayPercent" type="number" placeholder="0" value="0" class="form-control total" readonly />
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">%</span>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="1">UnionPay Cards</td>
+                                <td><select id="unionPaySelect" class="form-control">
+                                        <option value="0">None</option>
+                                        <option value="30">Yes</option>
+                                    </select></td>
+                                <td>
+                                    <div class="input-group mb-2 mb-sm-0">
+                                        <input id="unionPayPercent" type="number" placeholder="0" value="0" class="form-control total" readonly />
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">%</span>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="1">CUP_QR</td>
+                                <td><select id="CUP_QRSelect" class="form-control">
+                                        <option value="0">None</option>
+                                        <option value="10">Yes</option>
+                                    </select></td>
+                                <td>
+                                    <div class="input-group mb-2 mb-sm-0">
+                                        <input id="CUP_QRPercent" type="number" placeholder="0" value="0" class="form-control total" readonly />
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">%</span>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" style="background-color: black;"></td>
+                            </tr>
+                            <tr>
+                                <td colspan="1">Category In-store</td>
+                                <td><select id="inStoreSelect" class="form-control">
+                                        <option value="0">None</option>
+                                        <option value="25">Standalone</option>
+                                        <option value="50">Enterprise App</option>
+                                        <option value="100">Windows Plugin</option>
+                                        <option value="100">Integrated (POS/Gateway/Middleware)</option>
+                                    </select></td>
+                                <td>
+                                    <div class="input-group mb-2 mb-sm-0">
+                                        <input id="inStorePercent" type="number" placeholder="0" value="0" class="form-control total" readonly />
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">%</span>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="1">Category Remote payment</td>
+                                <td><select id="remoteSelect" class="form-control">
+                                        <option value="0">None</option>
+                                        <option value="25">PayByLink (25%)</option>
+                                    </select></td>
+                                <td>
+                                    <div class="input-group mb-2 mb-sm-0">
+                                        <input id="remotePercent" type="number" placeholder="0" value="0" class="form-control total" readonly />
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">%</span>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="1">Category E-Commerce</td>
+                                <td><select id="ecommerceSelect" class="form-control">
+                                        <option value="0">None</option>
+                                        <option value="10">WeChat Mini Program</option>
+                                        <option value="100">Regular Online Integration</option>
+                                    </select></td>
+                                <td>
+                                    <div class="input-group mb-2 mb-sm-0">
+                                        <input id="ecommercePercent" type="number" placeholder="0" value="0" class="form-control total" readonly />
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">%</span>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" style="background-color: black;"></td>
+                            </tr>
+                            <tr>
+                                <th colspan="2">Total deal value In-Store</th>
+                                <td>
+                                    <div class="input-group mb-2 mb-sm-0">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">$</span>
+                                        </div>
+                                        <input id="totDealValInstore" type="text" placeholder="0" value="0" class="form-control qty" step="0" min="0" readonly />
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th colspan="2">Total deal value Pay-By-Link</th>
+                                <td>
+                                    <div class="input-group mb-2 mb-sm-0">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">$</span>
+                                        </div>
+                                        <input id="totDealValPayByLink" type="text" placeholder="0" value="0" class="form-control qty" step="0" min="0" readonly />
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th colspan="2">Total deal value E-Commerce</th>
+                                <td>
+                                    <div class="input-group mb-2 mb-sm-0">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">$</span>
+                                        </div>
+                                        <input id="totDealValEcommerce" type="text" placeholder="0" value="0" class="form-control qty" step="0" min="0" readonly />
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- <div class="col-md-3"></div> -->
+            </div>
+
+            <div class="row clearfix" style="margin-top:20px">
+                <!-- <div class="col-md-3"></div> -->
+                <div class="col-md-12">
+                    <table class="table table-bordered table-hover">
+                        <tbody>
+                            <tr>
+                                <td colspan="2">Previous In-store deal value already commissioned (only if you already signed a deal before)</td>
+                                <td>
+                                    <div class="input-group mb-2 mb-sm-0">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">$</span>
+                                        </div>
+                                        <input id="prevDealValInstore" type="text" placeholder="0" value="0" class="form-control qty" step="0" min="0" />
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">Previous Pay-by-link deal value already commissioned (only if you already signed a deal before)</td>
+                                <td>
+                                    <div class="input-group mb-2 mb-sm-0">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">$</span>
+                                        </div>
+                                        <input id="prevDealValPayByLink" type="text" placeholder="0" value="0" class="form-control qty" step="0" min="0" />
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">Previous E-Commerce deal value already commissioned (only if you already signed a deal before)</td>
+                                <td>
+                                    <div class="input-group mb-2 mb-sm-0">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">$</span>
+                                        </div>
+                                        <input id="prevDealValEcommerce" type="text" placeholder="0" value="0" class="form-control qty" step="0" min="0" />
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th colspan="2">FINAL deal value In-Store</th>
+                                <td>
+                                    <div class="input-group mb-2 mb-sm-0">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">$</span>
+                                        </div>
+                                        <input id="finalDealValInstore" type="text" placeholder="0" value="0" class="form-control qty" step="0" min="0" readonly />
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th colspan="2">FINAL deal value Pay-By-Link</th>
+                                <td>
+                                    <div class="input-group mb-2 mb-sm-0">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">$</span>
+                                        </div>
+                                        <input id="finalDealValPayByLink" type="text" placeholder="0" value="0" class="form-control qty" step="0" min="0" readonly />
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th colspan="2">FINAL deal value E-Commerce</th>
+                                <td>
+                                    <div class="input-group mb-2 mb-sm-0">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">$</span>
+                                        </div>
+                                        <input id="finalDealValEcommerce" type="text" placeholder="0" value="0" class="form-control qty" step="0" min="0" readonly />
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- <div class="col-md-3"></div> -->
+            </div>
+        </div>
+        <div>
+            <input id="exportJPG1" type="image" style="height: 40px;" src="jpg.svg" />
+            <!-- <input id="exportPDF1" type="image" style="height: 40px;" src="pdf.svg" /> -->
+            <input id="copyJPG1" type="image" style="height: 40px;" src="clipboard.svg" />
+        </div>
+    </div>
+
+    <div id="tab2" class="tabcontent">
+        <div class="container2" style="margin-top: auto; padding-top: 15px;">
+            <div class="row clearfix">
+                <!-- <div class="col-md-3"></div> -->
+                <div class="col-md-12">
+                    <table class="table table-bordered table-hover">
+                        <!-- <thead>
+                            <tr>
+                                <th class="text-center"> </th>
+                                <th class="text-center"> </th>
+                                <th class="text-center"> </th>
+                            </tr>
+                        </thead> -->
+                        <tbody>
+                            <tr>
+                                <th colspan="2">Total revenue</th>
+                                <td>
+                                    <div class="input-group mb-2 mb-sm-0">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">$</span>
+                                        </div>
+                                        <input id="totalRevenue2" type="text" placeholder="0" value="0" class="form-control qty" step="0" min="0" />
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th colspan="2">Book value (Estimated Addressible Size for the Deal) %5</th>
+                                <td>
+                                    <div class="input-group mb-2 mb-sm-0">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">$</span>
+                                        </div>
+                                        <input id="bookValue2" type="text" placeholder="0" value="0" class="form-control qty" step="0" min="0" />
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th colspan="2">Percentage of stores launching (number of stores launching / total number of stores)</th>
+                                <td>
+                                    <div class="input-group mb-2 mb-sm-0">
+                                        <input id="percentOfStores2" type="number" placeholder="0" value="0" class="form-control qty" step="0" min="0" />
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">%</span>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="1">Paypal</td>
+                                <td><select id="paypalSelect" class="form-control">
+                                        <option value="0">None</option>
+                                        <option value="50">Yes</option>
+                                    </select></td>
+                                <td>
+                                    <div class="input-group mb-2 mb-sm-0">
+                                        <input id="paypalPercent" type="number" placeholder="0" value="0" class="form-control total" readonly />
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">%</span>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="1">Venmo</td>
+                                <td><select id="venmoSelect" class="form-control">
+                                        <option value="0">None</option>
+                                        <option value="50">Yes</option>
+                                    </select></td>
+                                <td>
+                                    <div class="input-group mb-2 mb-sm-0">
+                                        <input id="venmomPercent" type="number" placeholder="0" value="0" class="form-control total" readonly />
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">%</span>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td colspan="3" style="background-color: black;"></td>
+                            </tr>
+                            <tr>
+                                <td colspan="1">Category In-store</td>
+                                <td><select id="inStoreSelect2" class="form-control">
+                                        <option value="0">None</option>
+                                        <option value="25">Standalone</option>
+                                        <option value="50">Enterprise App</option>
+                                        <option value="100">Windows Plugin</option>
+                                        <option value="100">Integrated (POS/Gateway/Middleware)</option>
+                                    </select></td>
+                                <td>
+                                    <div class="input-group mb-2 mb-sm-0">
+                                        <input id="inStorePercent2" type="number" placeholder="0" value="0" class="form-control total" readonly />
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">%</span>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" style="background-color: black;"></td>
+                            </tr>
+                            <tr>
+                                <th colspan="2">Total deal value In-Store</th>
+                                <td>
+                                    <div class="input-group mb-2 mb-sm-0">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">$</span>
+                                        </div>
+                                        <input id="totDealValInstore2" type="text" placeholder="0" value="0" class="form-control qty" step="0" min="0" readonly />
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- <div class="col-md-3"></div> -->
+            </div>
+
+            <div class="row clearfix" style="margin-top:20px">
+                <!-- <div class="col-md-3"></div> -->
+                <div class="col-md-12">
+                    <table class="table table-bordered table-hover">
+                        <tbody>
+                            <tr>
+                                <td colspan="2">Previous In-store deal value already commissioned (only if you already signed a deal before)</td>
+                                <td>
+                                    <div class="input-group mb-2 mb-sm-0">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">$</span>
+                                        </div>
+                                        <input id="prevDealValInstore2" type="text" placeholder="0" value="0" class="form-control qty" step="0" min="0" />
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th colspan="2">FINAL deal value In-Store</th>
+                                <td>
+                                    <div class="input-group mb-2 mb-sm-0">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">$</span>
+                                        </div>
+                                        <input id="finalDealValInstore2" type="text" placeholder="0" value="0" class="form-control qty" step="0" min="0" readonly />
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- <div class="col-md-3"></div> -->
+            </div>
+        </div>
+        <div>
+            <input id="exportJPG2" type="image" style="height: 40px;" src="jpg.svg" />
+            <!-- <input id="exportPDF2" type="image" style="height: 40px;" src="pdf.svg" /> -->
+            <input id="copyJPG2" type="image" style="height: 40px;" src="clipboard.svg" />
+        </div>
+    </div>
+
+
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+
+    <script type="text/javascript" src="canvas2image.js"></script>
+    <script type="text/javascript" src="html2canvas.min.js"></script>
+    <script type="text/javascript" src="action.js"></script>
+    <script type="text/javascript">
+        function openPage(pageName, element) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+            tablinks = document.getElementsByClassName("tablink");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].style.backgroundColor = "";
+            }
+            element.style.backgroundColor = "seagreen";
+            document.getElementById(pageName).style.display = "block";
+        }
+
+        // Get the element with id="defaultOpen" and click on it
+        document.getElementById("defaultOpen").click();
+    </script>
+
+</body>
