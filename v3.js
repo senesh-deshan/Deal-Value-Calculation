@@ -57,11 +57,22 @@ var defaultConfig = {
 
 };
 
-// $('#sheet1').calx(defaultConfig);
-
-$(".calx").each(function(index) {
+$(".calx").each(function() {
     $(this).calx(defaultConfig);
 });
+
+for (let index = 0; index < config_data.length; index++) {
+    const element = config_data[index];
+    for (const [key, value] of Object.entries(element)) {
+        // console.log(document.querySelector('#sheet' + (index + 1) + ' [data-cell=' + key + ']').value = value)
+        sheet = $('#sheet' + (index + 1)).calx('getSheet')
+        cell = sheet.getCell(key)
+        cell.setValue(((value) / 100))
+        cell.renderComputedValue()
+    }
+}
+
+
 
 // $(".exportJPG").on("click", function(event) {
 //     id = $(this).data("id")
@@ -125,11 +136,3 @@ $(".exportPDF").on("click", function(event) {
         doc.save(document.querySelector(".container" + id).dataset.title + '_' + getFormattedTime() + '.pdf');
     });
 });
-
-
-for (let index = 0; index < config_data.length; index++) {
-    const element = config_data[index];
-    for (const [key, value] of Object.entries(element)) {
-        document.querySelector(".container" + (index + 1) + " input[data-cell=" + key + "]").value = value
-    }
-}
