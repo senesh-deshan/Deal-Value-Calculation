@@ -125,3 +125,11 @@ $(".exportPDF").on("click", function(event) {
         doc.save(document.querySelector(".container" + id).dataset.title + '_' + getFormattedTime() + '.pdf');
     });
 });
+
+
+for (let index = 0; index < config_data.length; index++) {
+    const element = config_data[index];
+    for (const [key, value] of Object.entries(element)) {
+        document.querySelector(".container" + (index + 1) + " input[data-cell=" + key + "]").value = value
+    }
+}
