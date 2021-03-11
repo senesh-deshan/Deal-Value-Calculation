@@ -57,6 +57,8 @@ var defaultConfig = {
 
 };
 
+
+
 $(".calx").each(function() {
     $(this).calx(defaultConfig);
 });
@@ -65,12 +67,13 @@ for (let index = 0; index < config_data.length; index++) {
     const element = config_data[index];
     for (const [key, value] of Object.entries(element)) {
         // console.log(document.querySelector('#sheet' + (index + 1) + ' [data-cell=' + key + ']').value = value)
-        sheet = $('#sheet' + (index + 1)).calx('getSheet')
-        cell = sheet.getCell(key)
-        cell.setValue(((value) / 100))
-        cell.renderComputedValue()
+        sheet = $('#sheet' + (index + 1)).calx('getSheet');
+        cell = sheet.getCell(key);
+        cell.setValue(((value) / 100));
+        cell.renderComputedValue();
     }
 }
+
 
 
 
@@ -109,6 +112,7 @@ $(".copyJPG").on("click", function(event) {
         canvas.toBlob(blob => {
             navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
             //alert("Copied to clipboard")
+            openSnack();
         })
     });
 });
