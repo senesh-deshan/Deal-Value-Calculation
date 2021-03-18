@@ -140,3 +140,205 @@ $(".exportPDF").on("click", function(event) {
         doc.save(document.querySelector(".container" + id).dataset.title + '_' + getFormattedTime() + '.pdf');
     });
 });
+
+$(".exportXLS").on("click", function(event) {
+    id = $(this).data("id");
+    sheetName = document.querySelector(".container" + id).dataset.title;
+    filename = sheetName + '_' + getFormattedTime();
+
+    $('[id^=sheet]').table2excel({
+        exclude: ".hidden",
+        name: "Worksheet Name",
+        filename: filename, //do not include extension
+        sheetName: sheetName,
+        fileext: ".xls", // file extension
+        preserveColors: true,
+        exclude_inputs: false
+    });
+
+    // var table2excel = new Table2Excel();
+    // table2excel.export(document.querySelectorAll("[id^=sheet]"));
+
+    // filename = "./Deal Value Calc.xlsx"
+    // console.log($('[id^=sheet]'))
+
+
+    // var files = inputElement.files || [];
+    // if (!files.length) return;
+    // var file = files[0];
+
+    // console.time();
+    // var reader = new FileReader();
+    // reader.onloadend = function(event) {
+    //     var arrayBuffer = reader.result;
+    //     // var buffer = Buffer.from(arrayBuffer)
+    //     // debugger
+
+    //     var workbook = new ExcelJS.Workbook();
+    //     // workbook.xlsx.read(buffer)
+    //     workbook.xlsx.load(arrayBuffer).then(function(workbook) {
+    //         console.timeEnd();
+    //         var result = ''
+    //         workbook.worksheets.forEach(function(sheet) {
+    //             sheet.eachRow(function(row, rowNumber) {
+    //                 result += row.values + ' | \n'
+    //             })
+    //         })
+    //         result2.innerHTML = result
+    //     });
+    // };
+    // reader.readAsArrayBuffer(filename);
+
+    // var wb = XLSX.utils.book_new();
+
+    // $('[id^=sheet]').each(function(i, o) {
+
+    //     e = o;
+    //     e.settings = {
+    //         exclude: ".hidden",
+    //         name: "Worksheet Name",
+    //         filename: filename, //do not include extension
+    //         sheetName: sheetName,
+    //         fileext: ".xls", // file extension
+    //         preserveColors: true,
+    //         exclude_inputs: false
+    //     }
+    //     e.tableRows = [];
+
+    //     var sheet = $(o).calx('getSheet');
+
+    //     var tempRows = "";
+    //     $(o).find("tr").not(e.settings.exclude).each(function(i, p) {
+
+    //         // Reset for this row
+    //         additionalStyles = "";
+
+    //         // Preserve background and text colors on the row
+    //         if (e.settings.preserveColors) {
+    //             compStyle = getComputedStyle(p);
+    //             additionalStyles += (compStyle && compStyle.backgroundColor ? "background-color: " + compStyle.backgroundColor + ";" : "");
+    //             additionalStyles += (compStyle && compStyle.color ? "color: " + compStyle.color + ";" : "");
+    //         }
+
+    //         // Create HTML for Row
+    //         tempRows += "<tr style='" + additionalStyles + "'>";
+
+    //         // Loop through each TH and TD
+    //         $(p).find("td,th").not(e.settings.exclude).each(function(i, q) { // p did not exist, I corrected
+
+    //             // Reset for this column
+    //             additionalStyles = "";
+
+    //             // Preserve background and text colors on the row
+    //             if (e.settings.preserveColors) {
+    //                 compStyle = getComputedStyle(q);
+    //                 additionalStyles += (compStyle && compStyle.backgroundColor ? "background-color: " + compStyle.backgroundColor + ";" : "");
+    //                 additionalStyles += (compStyle && compStyle.color ? "color: " + compStyle.color + ";" : "");
+    //                 additionalStyles += (compStyle && compStyle.fontWeight ? "font-weight: " + compStyle.fontWeight + ";" : "");
+    //                 additionalStyles += (compStyle && compStyle.textAlign ? "text-align: " + compStyle.textAlign + ";" : "");
+    //                 additionalStyles += (compStyle && compStyle.verticalAlign ? "vertical-align: " + compStyle.verticalAlign + ";" : "");
+    //             }
+
+    //             var rc = {
+    //                 rows: $(this).attr("rowspan"),
+    //                 cols: $(this).attr("colspan"),
+    //                 flag: $(q).find(e.settings.exclude)
+    //             };
+
+    //             if (rc.flag.length > 0) {
+    //                 tempRows += "<td> </td>"; // exclude it!!
+    //             } else {
+    //                 tempRows += "<td";
+    //                 if (rc.rows > 0) {
+    //                     tempRows += " rowspan='" + rc.rows + "' ";
+    //                 }
+    //                 if (rc.cols > 0) {
+    //                     tempRows += " colspan='" + rc.cols + "' ";
+    //                 }
+    //                 if (additionalStyles) {
+    //                     tempRows += " style='" + additionalStyles + "'";
+    //                 }
+
+
+    //                 var cell_element = $(q).find("input,select")[0];
+    //                 if (cell_element) {
+
+    //                     additionalStyles = "";
+    //                     if (e.settings.preserveColors) {
+    //                         compStyle = getComputedStyle(cell_element);
+    //                         additionalStyles += (compStyle && compStyle.backgroundColor ? "background-color: " + compStyle.backgroundColor + ";" : "");
+    //                         additionalStyles += (compStyle && compStyle.color ? "color: " + compStyle.color + ";" : "");
+    //                         additionalStyles += (compStyle && compStyle.fontWeight ? "font-weight: " + compStyle.fontWeight + ";" : "");
+    //                         additionalStyles += (compStyle && compStyle.textAlign ? "text-align: " + compStyle.textAlign + ";" : "");
+    //                         additionalStyles += (compStyle && compStyle.verticalAlign ? "vertical-align: " + compStyle.verticalAlign + ";" : "");
+
+    //                     }
+    //                     if (additionalStyles) {
+    //                         tempRows += " style='" + additionalStyles + "'";
+    //                     }
+    //                     var cell = sheet.getCell($(cell_element).data("cell"));
+
+    //                     var formatted_val = cell.getFormula();
+    //                     if (formatted_val) {
+    //                         formatted_val = "=" + formatted_val.replaceAll('\'', '"')
+    //                     } else {
+    //                         formatted_val = cell.getFormattedValue();
+    //                         if (!formatted_val) {
+    //                             formatted_val = numeral(0).format($(cell_element).data("format"));
+    //                         }
+    //                     }
+    //                     tempRows += ">" + formatted_val + "</td>";
+    //                 } else {
+    //                     tempRows += ">" + $(q).html() + "</td>";
+    //                 }
+
+    //             }
+    //         });
+
+    //         tempRows += "</tr>";
+
+    //     });
+
+
+    //     e.tableRows.push(tempRows);
+
+    //     table = "<table style=''>" + tempRows + "</table>"
+    //     console.log(table)
+    //         // var doc = new DOMParser().parseFromString(table, "text/xml");
+    //     var e = document.createElement('div');
+    //     e.setAttribute('style', 'display: none;');
+    //     e.innerHTML = table;
+    //     document.body.appendChild(e);
+
+    //     console.log(e.querySelector('table'))
+    //     var ws = XLSX.utils.table_to_sheet(e.querySelector('table'));
+
+
+
+    //     XLSX.utils.book_append_sheet(wb, ws, "sheet" + i);
+
+    //     document.body.removeChild(e)
+
+    // });
+
+    // XLSX.writeFile(wb, 'out.xlsx');
+
+    // var url = "Deal Value Calc.xlsx";
+
+    // /* set up async GET request */
+    // var req = new XMLHttpRequest();
+    // req.open("GET", url, true);
+    // req.responseType = "arraybuffer";
+
+    // req.onload = function(e) {
+    //     var data = new Uint8Array(req.response);
+    //     var workbook = XLSX.read(data, { type: "array" });
+    //     console.log(workbook)
+    //     XLSX.writeFile(workbook, 'out.xlsx');
+    //     /* DO SOMETHING WITH workbook HERE */
+    // }
+
+    // req.send();
+
+
+});
