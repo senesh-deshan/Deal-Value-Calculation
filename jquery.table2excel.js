@@ -98,6 +98,10 @@
                             additionalStyles += (compStyle && compStyle.fontWeight ? "font-weight: " + compStyle.fontWeight + ";" : "");
                             additionalStyles += (compStyle && compStyle.textAlign ? "text-align: " + compStyle.textAlign + ";" : "");
                             additionalStyles += (compStyle && compStyle.verticalAlign ? "vertical-align: " + compStyle.verticalAlign + ";" : "");
+                            additionalStyles += (compStyle && compStyle.borderTop ? "border-top: " + compStyle.borderTop + ";" : "");
+                            additionalStyles += (compStyle && compStyle.borderBottom ? "border-bottom: " + compStyle.borderBottom + ";" : "");
+                            additionalStyles += (compStyle && compStyle.borderLeft ? "border-left: " + compStyle.borderLeft + ";" : "");
+                            additionalStyles += (compStyle && compStyle.borderRight ? "border-right: " + compStyle.borderRight + ";" : "");
                         }
 
                         var rc = {
@@ -108,6 +112,7 @@
 
                         if (rc.flag.length > 0) {
                             tempRows += "<td> </td>"; // exclude it!!
+
                         } else {
                             tempRows += "<td";
                             if (rc.rows > 0) {
@@ -137,17 +142,37 @@
                                 if (additionalStyles) {
                                     tempRows += " style='" + additionalStyles + "'";
                                 }
-                                var cell = sheet.getCell($(cell_element).data("cell"));
 
-                                var formatted_val = cell.getFormula();
-                                if (formatted_val) {
-                                    formatted_val = "=" + formatted_val.replaceAll('\'', '"')
-                                } else {
-                                    formatted_val = cell.getFormattedValue();
-                                    if (!formatted_val) {
-                                        formatted_val = numeral(0).format($(cell_element).data("format"));
+                                if (cell_element.nodeName == "INPUT") {
+                                    var cell = sheet.getCell($(cell_element).data("cell"));
+
+                                    var formatted_val = cell.getFormula();
+                                    if (formatted_val) {
+                                        formatted_val = "=" + formatted_val.replaceAll('\'', '"')
+                                    } else {
+                                        formatted_val = cell.getFormattedValue();
+                                        if (!formatted_val) {
+                                            formatted_val = numeral(0).format($(cell_element).data("format"));
+                                        }
                                     }
+                                } else {
+
+                                    formatted_val = "<select>"
+                                        // formatted_val = cell_element.outerHTML
+
+                                    $(cell_element).find("option").each(function(i, r) {
+                                        selected = ""
+                                        if ($(cell_element).val() == $(r).html()) {
+                                            selected = "selected"
+                                        }
+
+                                        formatted_val += "<option " + selected + " value='" + $(r).html() + "'>" + $(r).html() + "</option>"
+                                    });
+                                    formatted_val += "</select>"
+                                        // console.log($(cell_element).val())
                                 }
+
+
                                 tempRows += ">" + formatted_val + "</td>";
                             } else {
                                 tempRows += ">" + $(q).html() + "</td>";

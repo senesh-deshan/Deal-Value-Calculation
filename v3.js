@@ -147,7 +147,7 @@ $(".exportXLS").on("click", function(event) {
     filename = sheetName + '_' + getFormattedTime();
 
     $('[id^=sheet]').table2excel({
-        exclude: ".hidden",
+        exclude: "",
         name: "Worksheet Name",
         filename: filename, //do not include extension
         sheetName: sheetName,
