@@ -143,34 +143,34 @@
                                     tempRows += " style='" + additionalStyles + "'";
                                 }
 
-                                if (cell_element.nodeName == "INPUT") {
-                                    var cell = sheet.getCell($(cell_element).data("cell"));
+                                // if (cell_element.nodeName == "INPUT") {
+                                var cell = sheet.getCell($(cell_element).data("cell"));
 
-                                    var formatted_val = cell.getFormula();
-                                    if (formatted_val) {
-                                        formatted_val = "=" + formatted_val.replaceAll('\'', '"')
-                                    } else {
-                                        formatted_val = cell.getFormattedValue();
-                                        if (!formatted_val) {
-                                            formatted_val = numeral(0).format($(cell_element).data("format"));
-                                        }
-                                    }
+                                var formatted_val = cell.getFormula();
+                                if (formatted_val) {
+                                    formatted_val = "=" + formatted_val.replaceAll('\'', '"')
                                 } else {
-
-                                    formatted_val = "<select>"
-                                        // formatted_val = cell_element.outerHTML
-
-                                    $(cell_element).find("option").each(function(i, r) {
-                                        selected = ""
-                                        if ($(cell_element).val() == $(r).html()) {
-                                            selected = "selected"
-                                        }
-
-                                        formatted_val += "<option " + selected + " value='" + $(r).html() + "'>" + $(r).html() + "</option>"
-                                    });
-                                    formatted_val += "</select>"
-                                        // console.log($(cell_element).val())
+                                    formatted_val = cell.getFormattedValue();
+                                    if (!formatted_val) {
+                                        formatted_val = numeral(0).format($(cell_element).data("format"));
+                                    }
                                 }
+                                // } else {
+
+                                //     formatted_val = "<select>"
+                                //         // formatted_val = cell_element.outerHTML
+
+                                //     $(cell_element).find("option").each(function(i, r) {
+                                //         selected = ""
+                                //         if ($(cell_element).val() == $(r).html()) {
+                                //             selected = "selected"
+                                //         }
+
+                                //         formatted_val += "<option " + selected + " value='" + $(r).html() + "'>" + $(r).html() + "</option>"
+                                //     });
+                                //     formatted_val += "</select>"
+                                //         // console.log($(cell_element).val())
+                                // }
 
 
                                 tempRows += ">" + formatted_val + "</td>";
@@ -271,6 +271,8 @@
 
             } else {
                 var blob = new Blob([e.format(fullTemplate, e.ctx)], { type: "application/vnd.ms-excel" });
+
+
                 window.URL = window.URL || window.webkitURL;
                 link = window.URL.createObjectURL(blob);
                 a = document.createElement("a");
@@ -282,6 +284,34 @@
                 a.click();
 
                 document.body.removeChild(a);
+
+
+
+                // var data = new FormData();
+                // data.append("inputFile", blob, "file");
+
+                // var xhr = new XMLHttpRequest();
+                // xhr.withCredentials = true;
+
+                // xhr.addEventListener("readystatechange", function() {
+                //     if (this.readyState === 4) {
+                //         console.log(this.responseText);
+                //     }
+                // });
+
+                // xhr.open("POST", "https://api.cloudmersive.com/convert/xls/to/xlsx");
+                // xhr.setRequestHeader("Content-Type", "multipart/form-data");
+                // xhr.setRequestHeader("Apikey", "60e250cc-5f20-4b00-aee6-1dc054060ce1");
+
+                // xhr.send(data);
+
+
+
+
+
+
+
+
             }
 
             return true;

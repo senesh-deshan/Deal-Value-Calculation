@@ -146,15 +146,27 @@ $(".exportXLS").on("click", function(event) {
     sheetName = document.querySelector(".container" + id).dataset.title;
     filename = sheetName + '_' + getFormattedTime();
 
-    $('[id^=sheet]').table2excel({
+    $('[id^=sheet' + id + ']').table2excel({
         exclude: "",
         name: "Worksheet Name",
         filename: filename, //do not include extension
         sheetName: sheetName,
-        fileext: ".xls", // file extension
+        fileext: ".xlsx", // file extension
         preserveColors: true,
         exclude_inputs: false
     });
+
+
+
+
+
+
+
+
+
+
+
+
 
     // var table2excel = new Table2Excel();
     // table2excel.export(document.querySelectorAll("[id^=sheet]"));
